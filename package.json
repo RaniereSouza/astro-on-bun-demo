@@ -1,0 +1,17 @@
+{
+  "name": "astro-on-bun-demo",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "bun astro dev",
+    "start": "bun astro dev",
+    "build": "bun astro check && bun astro build",
+    "preview": "bun astro preview",
+    "astro": "bunx --bun astro"
+  },
+  "dependencies": {
+    "astro": "^4.10.1",
+    "@astrojs/check": "^0.7.0",
+    "typescript": "^5.4.5"
+  }
+}
