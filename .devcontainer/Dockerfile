@@ -1,0 +1,13 @@
+FROM oven/bun:1.1.12-slim
+
+ENV USER=root
+
+RUN apt-get update
+
+# installing bat, 'cause it's fun :D
+RUN apt-get install wget -y
+RUN wget -P /tmp https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb
+RUN dpkg -i /tmp/bat_0.12.1_amd64.deb
+
+# istalling The Silver Searcher 'cause it's awesome
+RUN apt-get install silversearcher-ag
