@@ -5,13 +5,13 @@ import ThemeSwitcher from '../components/ThemeSwitcher.vue';
 ---
 
 <script>
+	import { setShared } from '../lib/shared';
+
 	function onThemeSwitched(theme: string) {
-		// const theme = String((event as CustomEvent).detail || 'dark');
 		document.documentElement.dataset.theme = theme;
 	}
 
-	// document.addEventListener('switch-theme', onThemeSwitched);
-	(window as Window & {onThemeSwitched?: Function}).onThemeSwitched = onThemeSwitched;
+	setShared('onThemeSwitched', onThemeSwitched);
 </script>
 
 <Layout title="Welcome to Astro.">
