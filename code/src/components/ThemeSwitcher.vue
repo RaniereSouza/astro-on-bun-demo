@@ -3,7 +3,6 @@
     <div class="theme-switcher-wrapper">
       <button :class="currentTheme" @click="toggleTheme">
         <span class="light-theme-icon">☀️</span>
-        &nbsp;&nbsp;
         <span class="dark-theme-icon">🌙</span>
       </button>
     </div>
@@ -11,39 +10,24 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, type PropType } from 'vue';
+  import { ref, onMounted } from 'vue';
 
   type Theme = 'dark' | 'light';
 
-  //>>> Vue component emitted events cannot be reached externally on Astro! <<<//
-  // const emit = defineEmits<{
-  //   (e: 'switch-theme', value: boolean): void,
-  // }>();
-
-  // function emit(eventName: string, eventPayload: unknown) {
-  //   document.dispatchEvent(new CustomEvent(eventName, {detail: eventPayload}));
-  // }
-
-  const { initialTheme } = defineProps({
-    initialTheme: {
-      type: String as PropType<Theme>,
-      default: 'dark',
-    },
-  });
-
-  const currentTheme = ref(initialTheme);
+  const currentTheme = ref<Theme>('dark');
+  // [ERROR] const currentTheme = ref((document.documentElement.dataset.theme || 'dark') as Theme); [ERROR]
+  // We cannot use the "document" global outside of an event handler function or a lifecycle hook, partial hydration throws error;
+  // If the component was added to the Astro template with the directive "client:only", then it would work
 
   function toggleTheme() {
     if (currentTheme.value === 'light') currentTheme.value = 'dark';
     else if (currentTheme.value === 'dark') currentTheme.value = 'light';
-    // emit('switch-theme', currentTheme.value);
-    window.onThemeSwitched?.(currentTheme.value);
+    document.documentElement.dataset.theme = currentTheme.value;
   }
 
   onMounted(() => {
-    // emit('switch-theme', currentTheme.value);
-    window.onThemeSwitched?.(currentTheme.value);
-  });
+    currentTheme.value = (document.documentElement.dataset.theme || 'dark') as Theme;
+  })
 </script>
 
 <style scoped>
@@ -65,12 +49,13 @@
   }
 
   button {
-    padding: .5rem;
+    padding: .5rem .75rem;
     font-size: 1.5rem;
     line-height: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 1.5rem;
     height: var(--theme-switcher-btn-size);
     border-radius: calc(var(--theme-switcher-btn-size) / 2); 
     outline: none;
