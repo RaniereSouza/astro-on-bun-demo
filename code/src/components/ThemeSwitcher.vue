@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, type PropType } from 'vue';
+  import { ref, watch, type PropType } from 'vue';
+  import { getShared } from '../lib/shared';
 
   type Theme = 'dark' | 'light';
 
@@ -32,18 +33,16 @@
   });
 
   const currentTheme = ref(initialTheme);
+  watch(currentTheme, () => {
+    // emit('switch-theme', currentTheme.value);
+    const onThemeSwitched = getShared('onThemeSwitched');
+    (typeof onThemeSwitched === 'function') && onThemeSwitched(currentTheme.value);
+  }, {immediate: true});
 
   function toggleTheme() {
     if (currentTheme.value === 'light') currentTheme.value = 'dark';
     else if (currentTheme.value === 'dark') currentTheme.value = 'light';
-    // emit('switch-theme', currentTheme.value);
-    window.onThemeSwitched?.(currentTheme.value);
   }
-
-  onMounted(() => {
-    // emit('switch-theme', currentTheme.value);
-    window.onThemeSwitched?.(currentTheme.value);
-  });
 </script>
 
 <style scoped>
