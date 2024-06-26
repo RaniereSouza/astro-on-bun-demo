@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch, type PropType } from 'vue';
+  import { ref, watch, type PropType, onMounted } from 'vue';
   import { getShared } from '../lib/shared';
 
   type Theme = 'dark' | 'light';
@@ -33,11 +33,19 @@
   });
 
   const currentTheme = ref(initialTheme);
-  watch(currentTheme, () => {
-    // emit('switch-theme', currentTheme.value);
-    const onThemeSwitched = getShared('onThemeSwitched');
-    (typeof onThemeSwitched === 'function') && onThemeSwitched(currentTheme.value);
-  }, {immediate: true});
+  onMounted(() => {
+    watch(currentTheme, () => {
+      // emit('switch-theme', currentTheme.value);
+      const onThemeSwitched = getShared('onThemeSwitched');
+      (typeof onThemeSwitched === 'function') && onThemeSwitched(currentTheme.value);
+    }, {immediate: true});
+  });
+  //>>> Outside of onMounted(), the watch() callback would happen before the component is on the browser! <<<//
+  // watch(currentTheme, () => {
+  //   // emit('switch-theme', currentTheme.value);
+  //   const onThemeSwitched = getShared('onThemeSwitched');
+  //   (typeof onThemeSwitched === 'function') && onThemeSwitched(currentTheme.value);
+  // }, {immediate: true});
 
   function toggleTheme() {
     if (currentTheme.value === 'light') currentTheme.value = 'dark';

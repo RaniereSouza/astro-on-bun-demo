@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import ThemeSwitcher from '../components/ThemeSwitcher.vue';
 
-const forceInitialTheme = 'light';
+const forcedInitialTheme = 'light';
 ---
 
 <script>
@@ -19,7 +19,7 @@ const forceInitialTheme = 'light';
 </script>
 
 <Layout title="Welcome to Astro.">
-	<ThemeSwitcher client:idle initialTheme={forceInitialTheme} />
+	<ThemeSwitcher client:idle initialTheme={forcedInitialTheme} />
 	<main>
 		<svg
 			class="astro-a"
